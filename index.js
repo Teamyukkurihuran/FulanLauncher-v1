@@ -1,6 +1,3 @@
-const remoteMain = require('@electron/remote/main')
-remoteMain.initialize()
-
 // Requirements
 const { app, BrowserWindow, ipcMain, Menu } = require('electron')
 const autoUpdater                   = require('electron-updater').autoUpdater
@@ -9,7 +6,7 @@ const fs                            = require('fs')
 const isDev                         = require('./app/assets/js/isdev')
 const path                          = require('path')
 const semver                        = require('semver')
-const { pathToFileURL }             = require('url')
+const url                           = require('url')
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -88,6 +85,9 @@ ipcMain.on('distributionIndexDone', (event, res) => {
 // https://electronjs.org/docs/tutorial/offscreen-rendering
 app.disableHardwareAcceleration()
 
+// https://github.com/electron/electron/issues/18397
+app.allowRendererProcessReuse = true
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -102,15 +102,20 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            enableRemoteModule: true,
+            worldSafeExecuteJavaScript: true
         },
         backgroundColor: '#171614'
     })
-    remoteMain.enable(win.webContents)
 
     ejse.data('bkid', Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)))
 
-    win.loadURL(pathToFileURL(path.join(__dirname, 'app', 'app.ejs')).toString())
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, 'app', 'app.ejs'),
+        protocol: 'file:',
+        slashes: true
+    }))
 
     /*win.once('ready-to-show', () => {
         win.show()
