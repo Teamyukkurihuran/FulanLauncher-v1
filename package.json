@@ -19,9 +19,6 @@
     "dist:linux": "npm run dist -- -l",
     "lint": "eslint --config .eslintrc.json ."
   },
-  "engines": {
-    "node": "16.x.x"
-  },
   "dependencies": {
     "@electron/remote": "^2.0.1",
     "adm-zip": "^0.5.9",
