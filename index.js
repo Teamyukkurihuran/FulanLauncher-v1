@@ -28,7 +28,7 @@ for (let s in settings) {
 ejse.data('APP_DISPLAY_NAME', settings.APP_DISPLAY_NAME)
 
 const redirectUriPrefix = 'https://login.microsoftonline.com/common/oauth2/nativeclient?'
-const clientID = 'de140eea-429a-4a6b-b67a-30ea6af614f3'
+const clientID = '12a27bca-f8c0-42cc-88dc-3cdbd3adb55f'
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {

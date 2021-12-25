@@ -1,4 +1,4 @@
-const APP_DATA_NAME = 'ModRealmsLauncher'
+const APP_DATA_NAME = 'FulanLauncher'
 const LIVE_DISTRIBUTION_URL = 'https://launcher.modrealms.net/deploy/distribution.json'
 const DEV_DISTRIBUTION_URL = 'https://launcher.modrealms.net/dev-deploy/distribution.json'
 

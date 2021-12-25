@@ -1,19 +1,19 @@
 {
-  "APP_DISPLAY_NAME": "ModRealms Launcher",
+  "APP_DISPLAY_NAME": "Fulan Launcher",
 
-  "WELCOME_HEADER_TEXT": "Welcome to ModRealms!",
+  "WELCOME_HEADER_TEXT": "ようこそフランランチャーへ！",
   "WELCOME_DESC_TEXT": "N/A",
   "WELCOME_DESC_CTA": "N/A",
 
   "WEBSITE_ENABLE": true,
-  "WEBSITE_URL": "https://modrealms.net",
+  "WEBSITE_URL": "https://www.yuhunet.ml/mc/",
   "TWITTER_ENABLE": true,
-  "TWITTER_URL": "https://twitter.com/modrealms",
+  "TWITTER_URL": "https://twitter.com/Endermanwindows",
   "INSTAGRAM_ENABLE": false,
   "INSTAGRAM_URL": "#",
   "YOUTUBE_ENABLE": true,
-  "YOUTUBE_URL": "https://www.youtube.com/channel/UCx_iGrTo1z_ZuOf2w_Lfl1Q",
+  "YOUTUBE_URL": "https://www.youtube.com/channel/UC025Lpmbv5nMKGD8pfwHNJg",
   "DISCORD_ENABLE": true,
-  "DISCORD_URL": "https://discord.gg/tKKeTdc"
+  "DISCORD_URL": "https://discord.gg/D4UDvcr8Bm"
 
 }

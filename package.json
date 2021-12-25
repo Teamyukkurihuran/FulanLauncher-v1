@@ -1,13 +1,13 @@
 {
-  "name": "modrealmslauncher",
-  "version": "2.5.1-release",
-  "productName": "ModRealms Launcher",
-  "description": "Modded Minecraft Launcher",
-  "author": "ModRealms",
+  "name": "fulanlauncher",
+  "version": "1.0.0-beta",
+  "productName": "Fulan Launcher",
+  "description": "フラン鯖に最適化",
+  "author": "Teamyukkurihuran",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/ModRealms-Network/HeliosLauncher",
+  "homepage": "https://github.com/Teamyukkurihuran/FulanLauncher",
   "bugs": {
-    "url": "https://github.com/ModRealms-Network/HeliosLauncher/issues"
+    "url": "https://github.com/Teamyukkurihuran/FulanLauncher/issues"
   },
   "private": true,
   "main": "index.js",
@@ -49,6 +49,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ModRealms-Network/ModRealmsLauncher.git"
+    "url": "git+https://github.com/Teamyukkurihuran/FulanLauncher.git"
   }
 }
