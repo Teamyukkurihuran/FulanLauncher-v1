@@ -43,11 +43,11 @@
         </div>
         <div id="settingsTabMinecraft" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Minecraft Settings</span>
-                <span class="settingsTabHeaderDesc">Options related to game launch.</span>
+                <span class="settingsTabHeaderText">マインクラフトの設定</span>
+                <span class="settingsTabHeaderDesc">起動構成 (上級者向け)</span>
             </div>
             <div id="settingsGameResolutionContainer">
-                <span class="settingsFieldTitle">Game Resolution</span>
+                <span class="settingsFieldTitle">Windowサイズ</span>
                 <div id="settingsGameResolutionContent">
                     <input type="number" id="settingsGameWidth" min="0" cValue="GameWidth">
                     <div id="settingsGameResolutionCross">&#10006;</div>
@@ -56,22 +56,11 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Launch in fullscreen</span>
+                    <span class="settingsFieldTitle">ゲーム起動時にフルスクリーンで起動</span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
                         <input type="checkbox" cValue="Fullscreen">
-                        <span class="toggleSwitchSlider"></span>
-                    </label>
-                </div>
-            </div>
-            <div class="settingsFieldContainer">
-                <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Automatically connect to the server on launch</span>
-                </div>
-                <div class="settingsFieldRight">
-                    <label class="toggleSwitch">
-                        <input type="checkbox" cValue="AutoConnect">
                         <span class="toggleSwitchSlider"></span>
                     </label>
                 </div>
@@ -103,41 +92,41 @@
         </div>
         <div id="settingsTabMods" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
-                <span class="settingsTabHeaderText">Modpack Settings</span>
-                <span class="settingsTabHeaderDesc">Enable or disable mods, and manage other elements of your modpack.</span>
+                <span class="settingsTabHeaderText">MOD管理</span>
+                <span class="settingsTabHeaderDesc">modを有効または無効にし、modpackの他の要素を管理します。</span>
             </div>
             <div id="settingsSelServContainer">
                 <div id="settingsSelServContent">
                 </div>
                 <div id="settingsSwitchServerContainer">
                     <div id="settingsSwitchServerContent">
-                        <button id="settingsSwitchServerButton">Switch</button>
+                        <button id="settingsSwitchServerButton">変える</button>
                     </div>
                 </div>
             </div>
             <div id="settingsModsContainer">
                 <div id="settingsReqModsContainer">
-                    <div class="settingsModsHeader">Required Mods</div>
+                    <div class="settingsModsHeader">必要MOD</div>
                     <div id="settingsReqModsContent">
 
                     </div>
                 </div>
                 <div id="settingsOptModsContainer">
-                    <div class="settingsModsHeader">Optional Mods</div>
+                    <div class="settingsModsHeader">オプションMOD</div>
                     <div id="settingsOptModsContent">
                         
                     </div>
                 </div>
                 <div id="settingsDropinModsContainer">
-                    <div class="settingsModsHeader">Drop-in Mods</div>
+                    <div class="settingsModsHeader">ドロップインMOD</div>
                     <button id="settingsDropinFileSystemButton">+ Add Mods <span id="settingsDropinRefreshNote">(F5 to Refresh)</span></button>
                     <div id="settingsDropinModsContent">
                         
                     </div>
                 </div>
                 <div id="settingsShaderpackContainer">
-                    <div class="settingsModsHeader">Shaderpacks</div>
-                    <div id="settingsShaderpackDesc">Enable or disable shaders. Please note, shaders will only run smoothly on powerful setups. You may add custom packs here.</div>
+                    <div class="settingsModsHeader">シェーダー</div>
+                    <div id="settingsShaderpackDesc">シェーダーを有効または無効にします。 シェーダーは強力なセットアップでのみスムーズに実行されることに注意してください。 ここでカスタムパックを追加できます。</div>
                     <div id="settingsShaderpackWrapper">
                         <button id="settingsShaderpackButton"> + </button>
                         <div class="settingsSelectContainer">
@@ -149,12 +138,12 @@
                     </div>
                 </div>
                 <div id="settingsResourcePackContainer">
-                    <div class="settingsModsHeader">Resource Packs</div>
-                    <div id="settingsResourcePackDesc">Enable or disable resource packs. Please note, higher resolution resource packs will only run smoothly on powerful setups, and will require more memory to be allocated. You may add custom packs here.</div>
+                    <div class="settingsModsHeader">リソースパック</div>
+                    <div id="settingsResourcePackDesc">リソースパックを有効または無効にします。 高解像度のリソースパックは強力なセットアップでのみスムーズに実行され、より多くのメモリを割り当てる必要があることに注意してください。 ここでカスタムパックを追加できます。</div>
                     <div id="settingsResourcePackWrapper">
                         <button id="settingsResourcePackButton"> + </button>
                         <div class="settingsSelectContainer">
-                            <div class="settingsSelectSelected" id="settingsResourcePackSelected">Select Resource Pack</div>
+                            <div class="settingsSelectSelected" id="settingsResourcePackSelected">リソースパックを選択する</div>
                             <div class="settingsSelectOptions" id="settingsResourcePackOptions" hidden>
 
                             </div>
@@ -166,7 +155,7 @@
         <div id="settingsTabJava" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
                 <span class="settingsTabHeaderText">Java Settings</span>
-                <span class="settingsTabHeaderDesc">Manage the Java configuration (advanced).</span>
+                <span class="settingsTabHeaderDesc">Java構成を管理します（上級者向け）</span>
             </div>
             <div id="settingsMemoryContainer">
                 <div id="settingsMemoryTitle">Memory</div>
@@ -258,12 +247,12 @@
         <div id="settingsTabLauncher" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
                 <span class="settingsTabHeaderText">Launcher Settings</span>
-                <span class="settingsTabHeaderDesc">Options related to the launcher itself.</span>
+                <span class="settingsTabHeaderDesc">ランチャー自体に関連するオプション。</span>
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Allow Pre-Release Updates.</span>
-                    <span class="settingsFieldDesc">Pre-Releases include new features which may have not been fully tested or integrated.<br>This will always be true if you are using a pre-release version.</span>
+                    <span class="settingsFieldTitle">プレイリリース版のインストールの許可</span>
+                    <span class="settingsFieldDesc">プレリリースには、完全にテストまたは統合されていない可能性のある新機能が含まれています。<br>This will always be true if you are using a pre-release version.</span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -272,21 +261,9 @@
                     </label>
                 </div>
             </div>
-            <div class="settingsFieldContainer">
-                <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Enable Discord Integration</span>
-                    <span class="settingsFieldDesc">This option will allow the launcher to control your presence on Discord. If you close the launcher at any time, this feature will no longer work.</span>
-                </div>
-                <div class="settingsFieldRight">
-                    <label class="toggleSwitch">
-                        <input type="checkbox" cValue="DiscordIntegration">
-                        <span class="toggleSwitchSlider"></span>
-                    </label>
-                </div>
-            </div>
             <div class="settingsFileSelContainer">
                 <div class="settingsFileSelContent">
-                    <div class="settingsFieldTitle" id="settingsDataDirTitle">Data Directory</div>
+                    <div class="settingsFieldTitle" id="settingsDataDirTitle">データディレクトリ</div>
                     <div class="settingsFileSelActions">
                         <div class="settingsFileSelIcon">
                             <svg class="settingsFileSelSVG">
@@ -302,7 +279,7 @@
                         <button class="settingsFileSelButton" dialogTitle="Select Data Directory" dialogDirectory="true">Choose Folder</button>
                     </div>
                 </div>
-                <div class="settingsFileSelDesc">All game files and local Java installations will be stored in the data directory.<br>Screenshots and world saves are stored in the instance folder for the corresponding server configuration.</div>
+                <div class="settingsFileSelDesc">すべてのゲームファイルとローカルJavaインストールは、データディレクトリに保存されます。<br>スクリーンショットとワールドセーブは、対応するサーバー構成のインスタンスフォルダーに保存されます。</div>
             </div>
             <div class="settingsServerCodeContainer" style="visibility:hidden ">
                 <div class="settingsServerCodesTitle">Your Server Codes</div>
@@ -327,12 +304,12 @@
                 <div id="settingsAboutCurrentContent">
                     <div id="settingsAboutCurrentHeadline">
                         <img id="settingsAboutLogo" src="./assets/images/SealCircle.png">
-                        <span id="settingsAboutTitle">ModRealms Launcher</span>
+                        <span id="settingsAboutTitle">Furan Launcher</span>
                     </div>
                     <div id="settingsAboutCurrentVersion">
                         <div id="settingsAboutCurrentVersionCheck">&#10003;</div>
                         <div id="settingsAboutCurrentVersionDetails">
-                            <span id="settingsAboutCurrentVersionTitle">Stable Release</span>
+                            <span id="settingsAboutCurrentVersionTitle">LTS Release</span>
                             <div id="settingsAboutCurrentVersionLine">
                                 <span id="settingsAboutCurrentVersionText">Version </span>
                                 <span id="settingsAboutCurrentVersionValue">0.0.1-alpha.12</span>
@@ -341,9 +318,9 @@
                     </div>
                 </div>
                 <div id="settingsAboutButtons">
-                    <a href="https://github.com/ModRealms-Network/HeliosLauncher" id="settingsAboutSourceButton" class="settingsAboutButton">Source (GitHub)</a>
+                    <a href="https://github.com/Teamyukkurihuran/FulanLauncher" id="settingsAboutSourceButton" class="settingsAboutButton">Source (GitHub)</a>
                     <a href="https://github.com/dscalzi/HeliosLauncher" id="settingsAboutSourceButton" class="settingsAboutButton">Original Source</a>
-                    <a href="https://github.com/ModRealms-Network/HeliosLauncher" id="settingsAboutSupportButton" class="settingsAboutButton">Support</a>
+                    <a href="https://github.com/Teamyukkurihuran/FulanLauncher" id="settingsAboutSupportButton" class="settingsAboutButton">Support</a>
                     <a href="#" id="settingsAboutDevToolsButton" class="settingsAboutButton">DevTools Console</a>
                 </div>
             </div>
@@ -351,7 +328,7 @@
                 <div class="settingsChangelogContent">
                     <div class="settingsChangelogHeadline">
                         <div class="settingsChangelogLabel">Release Notes</div>
-                        <div class="settingsChangelogTitle">Changelog</div>
+                        <div class="settingsChangelogTitle">変更点</div>
                     </div>
                     <div class="settingsChangelogText">
                         No Release Notes
@@ -365,17 +342,17 @@
         <div id="settingsTabUpdate" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">
                 <span class="settingsTabHeaderText">Launcher Updates</span>
-                <span class="settingsTabHeaderDesc">Download, install, and review updates for the launcher.</span>
+                <span class="settingsTabHeaderDesc">ダウンロードしてインストールします。</span>
             </div>
             <div id="settingsUpdateStatusContainer">
                 <div id="settingsUpdateStatusContent">
                     <div id="settingsUpdateStatusHeadline">
-                        <span id="settingsUpdateTitle">You Are Running the Latest Version</span>
+                        <span id="settingsUpdateTitle">最新バージョンのLauncherを使用中です。</span>
                     </div>
                     <div id="settingsUpdateVersion">
                         <div id="settingsUpdateVersionCheck">&#10003;</div>
                         <div id="settingsUpdateVersionDetails">
-                            <span id="settingsUpdateVersionTitle">Stable Release</span>
+                            <span id="settingsUpdateVersionTitle">LTS Release</span>
                             <div id="settingsUpdateVersionLine">
                                 <span id="settingsUpdateVersionText">Version </span>
                                 <span id="settingsUpdateVersionValue">0.0.1-alpha.18</span>
@@ -383,7 +360,7 @@
                         </div>
                     </div>
                     <div id="settingsUpdateActionContainer">
-                        <button id="settingsUpdateActionButton">Check for Updates</button>
+                        <button id="settingsUpdateActionButton">アップデートを確認</button>
                     </div>
                 </div>
             </div>

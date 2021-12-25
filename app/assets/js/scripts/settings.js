@@ -553,7 +553,7 @@ function populateAuthAccounts() {
                     </div>
                 </div>
                 <div class="settingsAuthAccountActions">
-                    <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>現在使用中のアカウント &#10004;' : '>このアカウントを選択'}</button>
+                    <button class="settingsAuthAccountSelect" ${selectedUUID === acc.uuid ? 'selected>使用中のアカウント &#10004;' : '>このアカウントを選択'}</button>
                     <div class="settingsAuthAccountWrapper">
                         <button class="settingsAuthAccountLogOut">ログアウト</button>
                     </div>
@@ -1430,7 +1430,7 @@ function populateVersionInformation(version, valueElement, titleElement, checkEl
         titleElement.style.color = '#ff886d'
         checkElement.style.background = '#ff886d'
     } else {
-        titleElement.innerHTML = 'Stable Release'
+        titleElement.innerHTML = 'LTS Release'
         titleElement.style.color = null
         checkElement.style.background = null
     }
