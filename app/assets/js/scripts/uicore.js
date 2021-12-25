@@ -5,10 +5,11 @@
  * modules, excluding dependencies.
  */
 // Requirements
-const $                                      = require('jquery')
-const {ipcRenderer, remote, shell, webFrame} = require('electron')
-const isDev                                  = require('./assets/js/isdev')
-const LoggerUtil                             = require('./assets/js/loggerutil')
+const $                              = require('jquery')
+const {ipcRenderer, shell, webFrame} = require('electron')
+const remote                         = require('@electron/remote')
+const isDev                          = require('./assets/js/isdev')
+const LoggerUtil                     = require('./assets/js/loggerutil')
 
 const loggerUICore             = LoggerUtil('%c[UICore]', 'color: #000668; font-weight: bold')
 const loggerAutoUpdater        = LoggerUtil('%c[AutoUpdater]', 'color: #000668; font-weight: bold')
@@ -42,21 +43,21 @@ if(!isDev){
         switch(arg){
             case 'checking-for-update':
                 loggerAutoUpdater.log('Checking for update..')
-                settingsUpdateButtonStatus('アップデートを確認中..', true)
+                settingsUpdateButtonStatus('Checking for Updates..', true)
                 break
             case 'update-available':
                 loggerAutoUpdaterSuccess.log('New update available', info.version)
                 
                 if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/TeamKun/NumaLauncher/releases/download/v${info.version}/numalauncher-setup-${info.version}.dmg`
+                    info.darwindownload = `https://github.com/dscalzi/HeliosLauncher/releases/download/v${info.version}/helioslauncher-setup-${info.version}${process.arch === 'arm64' ? '-arm64' : ''}.dmg`
                     showUpdateUI(info)
                 }
                 
                 populateSettingsUpdateInformation(info)
                 break
             case 'update-downloaded':
-                loggerAutoUpdaterSuccess.log('・アップデート ' + info.version + ' がインストール可能です。')
-                settingsUpdateButtonStatus('今すぐインストール', false, () => {
+                loggerAutoUpdaterSuccess.log('Update ' + info.version + ' ready to be installed.')
+                settingsUpdateButtonStatus('Install Now', false, () => {
                     if(!isDev){
                         ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
                     }
@@ -65,7 +66,7 @@ if(!isDev){
                 break
             case 'update-not-available':
                 loggerAutoUpdater.log('No new update found.')
-                settingsUpdateButtonStatus('アップデートを確認する')
+                settingsUpdateButtonStatus('Check for Updates')
                 break
             case 'ready':
                 updateCheckListener = setInterval(() => {

@@ -4,8 +4,8 @@
 // Requirements
 const cp                      = require('child_process')
 const crypto                  = require('crypto')
-const request                 = require('request')
-const {URL}                   = require('url')
+const { URL }                 = require('url')
+const { getServerStatus }     = require('helios-core')
 
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
@@ -20,9 +20,7 @@ const launch_progress         = document.getElementById('launch_progress')
 const launch_progress_label   = document.getElementById('launch_progress_label')
 const launch_details_text     = document.getElementById('launch_details_text')
 const server_selection_button = document.getElementById('server_selection_button')
-const server_selection_button_status = document.getElementById('server_selection_button_status')
 const user_text               = document.getElementById('user_text')
-const notion                  = document.getElementById('notion')
 
 const loggerLanding = LoggerUtil('%c[Landing]', 'color: #000668; font-weight: bold')
 
@@ -133,7 +131,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://crafatar.com/renders/body/${authUser.uuid}?overlay')`
+            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/body/${authUser.uuid}/right')`
         }
     }
     user_text.innerHTML = username
@@ -147,14 +145,14 @@ function updateSelectedServer(serv){
     }
     ConfigManager.setSelectedServer(serv != null ? serv.getID() : null)
     ConfigManager.save()
-    server_selection_button_status.innerHTML = '\u2022 ' + (serv != null ? serv.getName() : 'Modパックが選択されていません')
+    server_selection_button.innerHTML = '\u2022 ' + (serv != null ? serv.getName() : 'No Server Selected')
     if(getCurrentView() === VIEWS.settings){
         animateModsTabRefresh()
     }
     setLaunchEnabled(serv != null)
 }
 // Real text is set in uibinder.js on distributionIndexDone.
-server_selection_button_status.innerHTML = '\u2022 ロード中..'
+server_selection_button.innerHTML = '\u2022 Loading..'
 server_selection_button.onclick = (e) => {
     e.target.blur()
     toggleServerSelection(true)
@@ -175,11 +173,6 @@ const refreshMojangStatuses = async function(){
 
         for(let i=0; i<statuses.length; i++){
             const service = statuses[i]
-
-            // Mojang API is broken for sessionserver. https://bugs.mojang.com/browse/WEB-2303
-            if(service.service === 'sessionserver.mojang.com') {
-                service.status = 'green'
-            }
 
             if(service.essential){
                 tooltipEssentialHTML += `<div class="mojangStatusContainer">
@@ -233,11 +226,11 @@ const refreshServerStatus = async function(fade = false){
 
     try {
         const serverURL = new URL('my://' + serv.getAddress())
-        const servStat = await ServerStatus.getStatus(serverURL.hostname, serverURL.port)
-        if(servStat.online){
-            pLabel = 'プレイヤー'
-            pVal = servStat.onlinePlayers + '/' + servStat.maxPlayers
-        }
+
+        const servStat = await getServerStatus(47, serverURL.hostname, Number(serverURL.port))
+        console.log(servStat)
+        pLabel = 'PLAYERS'
+        pVal = servStat.players.online + '/' + servStat.players.max
 
     } catch (err) {
         loggerLanding.warn('Unable to refresh server status, assuming offline.')
@@ -273,7 +266,7 @@ function showLaunchFailure(title, desc){
     setOverlayContent(
         title,
         desc,
-        '了解'
+        'Okay'
     )
     setOverlayHandler(null)
     toggleOverlay(true)
@@ -295,7 +288,7 @@ let extractListener
  */
 function asyncSystemScan(mcVersion, launchAfter = true){
 
-    setLaunchDetails('しばらくお待ち下さい..')
+    setLaunchDetails('Please wait..')
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -330,13 +323,13 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                 // If the result is null, no valid Java installation was found.
                 // Show this information to the user.
                 setOverlayContent(
-                    '対応したJava<br>がインストールされていません',
-                    '参加するためには64ビット版Javaのインストールが必要です。インストールしますか?インストールには<a href="http://www.oracle.com/technetwork/java/javase/terms/license/index.html">Oracleライセンス条項</a>に同意する必要があります。',
-                    'Javaをインストール',
-                    '手動でインストール'
+                    'No Compatible<br>Java Installation Found',
+                    'In order to join WesterosCraft, you need a 64-bit installation of Java 8. Would you like us to install a copy?',
+                    'Install Java',
+                    'Install Manually'
                 )
                 setOverlayHandler(() => {
-                    setLaunchDetails('Javaダウンロードの準備中..')
+                    setLaunchDetails('Preparing Java Download..')
                     sysAEx.send({task: 'changeContext', class: 'AssetGuard', args: [ConfigManager.getCommonDirectory(),ConfigManager.getJavaExecutable()]})
                     sysAEx.send({task: 'execute', function: '_enqueueOpenJDK', argsArr: [ConfigManager.getDataDirectory()]})
                     toggleOverlay(false)
@@ -345,10 +338,10 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                     $('#overlayContent').fadeOut(250, () => {
                         //$('#overlayDismiss').toggle(false)
                         setOverlayContent(
-                            '起動には<br>Javaが必要です',
-                            '起動には64ビット版Javaのインストールが必要です。<br><br>手動インストールは <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java Management Guide (英語)</a> を参考にしてください。',
-                            '分かりました',
-                            '戻る'
+                            'Java is Required<br>to Launch',
+                            'A valid x64 installation of Java 8 is required to launch.<br><br>Please refer to our <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java Management Guide</a> for instructions on how to manually install Java.',
+                            'I Understand',
+                            'Go Back'
                         )
                         setOverlayHandler(() => {
                             toggleLaunchArea(false)
@@ -383,7 +376,7 @@ function asyncSystemScan(mcVersion, launchAfter = true){
             if(m.result === true){
 
                 // Oracle JRE enqueued successfully, begin download.
-                setLaunchDetails('Javaをダウンロード中..')
+                setLaunchDetails('Downloading Java..')
                 sysAEx.send({task: 'execute', function: 'processDlQueues', argsArr: [[{id:'java', limit:1}]]})
 
             } else {
@@ -391,9 +384,9 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                 // Oracle JRE enqueue failed. Probably due to a change in their website format.
                 // User will have to follow the guide to install Java.
                 setOverlayContent(
-                    '問題発生:<br>Javaのダウンロードに失敗した',
-                    '不幸なことにJavaのインストールに失敗してしまいました。手動でインストールする必要があります。手動インストールは <a href="https://github.com/dscalzi/HeliosLauncher/wiki">Troubleshooting Guide (英語)</a> を参考にしてください。',
-                    'わかりました'
+                    'Unexpected Issue:<br>Java Download Failed',
+                    'Unfortunately we\'ve encountered an issue while attempting to install Java. You will need to manually install a copy. Please check out our <a href="https://github.com/dscalzi/HeliosLauncher/wiki">Troubleshooting Guide</a> for more details and instructions.',
+                    'I Understand'
                 )
                 setOverlayHandler(() => {
                     toggleOverlay(false)
@@ -421,7 +414,7 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                     remote.getCurrentWindow().setProgressBar(2)
 
                     // Wait for extration to complete.
-                    const eLStr = '展開中'
+                    const eLStr = 'Extracting'
                     let dotStr = ''
                     setLaunchDetails(eLStr)
                     extractListener = setInterval(() => {
@@ -447,7 +440,7 @@ function asyncSystemScan(mcVersion, launchAfter = true){
                         extractListener = null
                     }
 
-                    setLaunchDetails('Javaのインストール完了!')
+                    setLaunchDetails('Java Installed!')
 
                     if(launchAfter){
                         dlAsync()
@@ -463,7 +456,7 @@ function asyncSystemScan(mcVersion, launchAfter = true){
     })
 
     // Begin system Java scan.
-    setLaunchDetails('システムをスキャン中..')
+    setLaunchDetails('Checking system info..')
     sysAEx.send({task: 'execute', function: 'validateJava', argsArr: [ConfigManager.getDataDirectory()]})
 
 }
@@ -528,12 +521,12 @@ function dlAsync(login = true){
     })
     aEx.on('error', (err) => {
         loggerLaunchSuite.error('Error during launch', err)
-        showLaunchFailure('起動中に問題が発生しました', err.message || '(CTRL + Shift + i) でコンソールを開けば何かがわかるかもしれません。')
+        showLaunchFailure('Error During Launch', err.message || 'See console (CTRL + Shift + i) for more details.')
     })
     aEx.on('close', (code, signal) => {
         if(code !== 0){
             loggerLaunchSuite.error(`AssetExec exited with code ${code}, assuming error.`)
-            showLaunchFailure('起動中に問題が発生しました', '(CTRL + Shift + i) でコンソールを開けば何かがわかるかもしれません。')
+            showLaunchFailure('Error During Launch', 'See console (CTRL + Shift + i) for more details.')
         }
     })
 
@@ -545,27 +538,27 @@ function dlAsync(login = true){
                 case 'distribution':
                     setLaunchPercentage(20, 100)
                     loggerLaunchSuite.log('Validated distibution index.')
-                    setLaunchDetails('バージョン情報を読込中..')
+                    setLaunchDetails('Loading version information..')
                     break
                 case 'version':
                     setLaunchPercentage(40, 100)
                     loggerLaunchSuite.log('Version data loaded.')
-                    setLaunchDetails('アセットを検証中..')
+                    setLaunchDetails('Validating asset integrity..')
                     break
                 case 'assets':
                     setLaunchPercentage(60, 100)
                     loggerLaunchSuite.log('Asset Validation Complete')
-                    setLaunchDetails('ライブラリを検証中..')
+                    setLaunchDetails('Validating library integrity..')
                     break
                 case 'libraries':
                     setLaunchPercentage(80, 100)
                     loggerLaunchSuite.log('Library validation complete.')
-                    setLaunchDetails('ファイルを検証中..')
+                    setLaunchDetails('Validating miscellaneous file integrity..')
                     break
                 case 'files':
                     setLaunchPercentage(100, 100)
                     loggerLaunchSuite.log('File validation complete.')
-                    setLaunchDetails('ファイルをダウンロード中..')
+                    setLaunchDetails('Downloading files..')
                     break
             }
         } else if(m.context === 'progress'){
@@ -583,7 +576,7 @@ function dlAsync(login = true){
                     remote.getCurrentWindow().setProgressBar(2)
 
                     // Download done, extracting.
-                    const eLStr = 'ライブラリを展開中'
+                    const eLStr = 'Extracting libraries'
                     let dotStr = ''
                     setLaunchDetails(eLStr)
                     progressListener = setInterval(() => {
@@ -607,7 +600,7 @@ function dlAsync(login = true){
                         progressListener = null
                     }
 
-                    setLaunchDetails('起動の準備中..')
+                    setLaunchDetails('Preparing to launch..')
                     break
             }
         } else if(m.context === 'error'){
@@ -617,13 +610,13 @@ function dlAsync(login = true){
                     
                     if(m.error.code === 'ENOENT'){
                         showLaunchFailure(
-                            'ダウンロードエラー',
-                            'ファイルサーバーに接続できません。インターネットに繋がれているか確認し、もう一度お試しください。'
+                            'Download Error',
+                            'Could not connect to the file server. Ensure that you are connected to the internet and try again.'
                         )
                     } else {
                         showLaunchFailure(
-                            'ダウンロードエラー',
-                            '(CTRL + Shift + i) でコンソールを開けば何かがわかるかもしれません。もう一度お試しください。'
+                            'Download Error',
+                            'Check the console (CTRL + Shift + i) for more details. Please try again.'
                         )
                     }
 
@@ -642,7 +635,7 @@ function dlAsync(login = true){
                 loggerLaunchSuite.error('Error during validation:', m.result)
 
                 loggerLaunchSuite.error('Error during launch', m.result.error)
-                showLaunchFailure('起動中に問題が発生しました', '(CTRL + Shift + i) でコンソールを開けば何かがわかるかもしれません。')
+                showLaunchFailure('Error During Launch', 'Please check the console (CTRL + Shift + i) for more details.')
 
                 allGood = false
             }
@@ -662,7 +655,7 @@ function dlAsync(login = true){
                 const onLoadComplete = () => {
                     toggleLaunchArea(false)
                     if(hasRPC){
-                        DiscordWrapper.updateDetails('ゲームをロード中..')
+                        DiscordWrapper.updateDetails('Loading game..')
                     }
                     proc.stdout.on('data', gameStateChange)
                     proc.stdout.removeListener('data', tempListener)
@@ -689,9 +682,9 @@ function dlAsync(login = true){
                 const gameStateChange = function(data){
                     data = data.trim()
                     if(SERVER_JOINED_REGEX.test(data)){
-                        DiscordWrapper.updateDetails('50人クラフトに参加中!')
+                        DiscordWrapper.updateDetails('Exploring the Realm!')
                     } else if(GAME_JOINED_REGEX.test(data)){
-                        DiscordWrapper.updateDetails('マインクラフトをプレイ中!')
+                        DiscordWrapper.updateDetails('Sailing to Westeros!')
                     }
                 }
 
@@ -699,7 +692,7 @@ function dlAsync(login = true){
                     data = data.trim()
                     if(data.indexOf('Could not find or load main class net.minecraft.launchwrapper.Launch') > -1){
                         loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
-                        showLaunchFailure('起動中に問題が発生しました', '重要なファイルであるLaunchWrapperのダウンロードに失敗したため、ゲームを起動できません。<br><br>このエラーを直すためには一旦、ウィルス対策ソフトを無効にして起動し直してみてください。')
+                        showLaunchFailure('Error During Launch', 'The main file, LaunchWrapper, failed to download properly. As a result, the game cannot launch.<br><br>To fix this issue, temporarily turn off your antivirus software and launch the game again.<br><br>If you have time, please <a href="https://github.com/dscalzi/HeliosLauncher/issues">submit an issue</a> and let us know what antivirus software you use. We\'ll contact them and try to straighten things out.')
                     }
                 }
 
@@ -707,47 +700,11 @@ function dlAsync(login = true){
                     // Build Minecraft process.
                     proc = pb.build()
 
-
-
-                    //options.txtを共通化する
-                    const fs = require('fs')
-                    const filenames = fs.readdirSync(ConfigManager.getInstanceDirectory())
-                    const path = require('path')
-                    //共通化のオプションがオンの時かつコピー先オプションファイルが存在しないときコピーを実行する
-                    if (ConfigManager.getoptionStandardize() && !fs.existsSync(path.join(pb.gameDir,'options.txt'))){
-                        //最新のoptions.txtを取得する
-                        let maxMtime = null
-                        let optionfilepath = ''
-                        filenames.forEach((filename) => {
-
-                            const optionPath = path.join(ConfigManager.getInstanceDirectory(),filename,'options.txt')
-
-                            if(fs.existsSync(optionPath) ){
-                                const stats = fs.statSync(optionPath)
-                                if(maxMtime == null || stats.mtime >maxMtime){
-                                    maxMtime = stats.mtime
-                                    optionfilepath = optionPath
-                                }
-                            }
-
-                        })
-
-                        //コピー元ファイルが存在するときコピーを実行する
-                        if (maxMtime != null){
-                            console.log('options.txtコピー実行 コピー元:'+optionfilepath)
-                            const copy = require('./assets/js/optionscopy')
-                            copy.copy(optionfilepath,path.join(pb.gameDir,'options.txt'))
-                        }
-                    }
-
-
-
-
                     // Bind listeners to stdout.
                     proc.stdout.on('data', tempListener)
                     proc.stderr.on('data', gameErrorListener)
 
-                    setLaunchDetails('準備OK。参加勢集合！')
+                    setLaunchDetails('Done. Enjoy the server!')
 
                     // Init Discord Hook
                     const distro = DistroManager.getDistribution()
@@ -765,7 +722,7 @@ function dlAsync(login = true){
                 } catch(err) {
 
                     loggerLaunchSuite.error('Error during launch', err)
-                    showLaunchFailure('起動中に問題が発生しました', '(CTRL + Shift + i) でコンソールを開けば何かがわかるかもしれません。')
+                    showLaunchFailure('Error During Launch', 'Please check the console (CTRL + Shift + i) for more details.')
 
                 }
             }
@@ -779,7 +736,7 @@ function dlAsync(login = true){
     // Begin Validations
 
     // Validate Forge files.
-    setLaunchDetails('Modパックの情報をロード中..')
+    setLaunchDetails('Loading server information..')
 
     refreshDistributionIndex(true, (data) => {
         onDistroRefresh(data)
@@ -794,7 +751,7 @@ function dlAsync(login = true){
         }, (err) => {
             loggerLaunchSuite.error('Unable to refresh distribution index.', err)
             if(DistroManager.getDistribution() == null){
-                showLaunchFailure('致命的なエラー', '配布マニフェストの読み込みに失敗したため失敗しました。(CTRL + Shift + i) でコンソールを開けば何かがわかるかもしれません。')
+                showLaunchFailure('Fatal Error', 'Could not load a copy of the distribution index. See the console (CTRL + Shift + i) for more details.')
 
                 // Disconnect from AssetExec
                 aEx.disconnect()
@@ -806,77 +763,10 @@ function dlAsync(login = true){
     })
 }
 
-// News slide caches.
-let newsActive = false
-let newsGlideCount = 0
-
 /**
- * Show the news UI via a slide animation.
- *
- * @param {boolean} up True to slide up, otherwise false.
- */
-function slide_(up){
-    const lCUpper = document.querySelector('#landingContainer > #upper')
-    const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
-    const lCLCenter = document.querySelector('#landingContainer > #lower > #center')
-    const lCLRight = document.querySelector('#landingContainer > #lower > #right')
-    const newsBtn = document.querySelector('#landingContainer > #lower > #center #content')
-    const landingContainer = document.getElementById('landingContainer')
-    const newsContainer = document.querySelector('#landingContainer > #newsContainer')
-
-    newsGlideCount++
-
-    if(up){
-        lCUpper.style.top = '-200vh'
-        lCLLeft.style.top = '-200vh'
-        lCLCenter.style.top = '-200vh'
-        lCLRight.style.top = '-200vh'
-        newsBtn.style.top = '130vh'
-        newsContainer.style.top = '0px'
-        //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
-        //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
-        landingContainer.style.background = 'rgba(0, 0, 0, 0.50)'
-        setTimeout(() => {
-            if(newsGlideCount === 1){
-                lCLCenter.style.transition = 'none'
-                newsBtn.style.transition = 'none'
-            }
-            newsGlideCount--
-        }, 2000)
-    } else {
-        setTimeout(() => {
-            newsGlideCount--
-        }, 2000)
-        landingContainer.style.background = null
-        lCLCenter.style.transition = null
-        newsBtn.style.transition = null
-        newsContainer.style.top = '100%'
-        lCUpper.style.top = '0px'
-        lCLLeft.style.top = '0px'
-        lCLCenter.style.top = '0px'
-        lCLRight.style.top = '0px'
-        newsBtn.style.top = '10px'
-    }
-}
-
-// Bind news button.
-document.getElementById('newsButton').onclick = () => {
-    // Toggle tabbing.
-    if(newsActive){
-        $('#landingContainer *').removeAttr('tabindex')
-        $('#newsContainer *').attr('tabindex', '-1')
-    } else {
-        $('#landingContainer *').attr('tabindex', '-1')
-        $('#newsContainer, #newsContainer *, #lower, #lower #center *').removeAttr('tabindex')
-    }
-    slide_(!newsActive)
-    newsActive = !newsActive
-}
-
-/*
-/!**
  * News Loading Functions
- *!/
+ */
+
 // DOM Cache
 const newsContent                   = document.getElementById('newsContent')
 const newsArticleTitle              = document.getElementById('newsArticleTitle')
@@ -891,11 +781,11 @@ const nELoadSpan                    = document.getElementById('nELoadSpan')
 let newsActive = false
 let newsGlideCount = 0
 
-/!**
+/**
  * Show the news UI via a slide animation.
  * 
  * @param {boolean} up True to slide up, otherwise false. 
- *!/
+ */
 function slide_(up){
     const lCUpper = document.querySelector('#landingContainer > #upper')
     const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
@@ -966,11 +856,11 @@ let newsArr = null
 // News load animation listener.
 let newsLoadingListener = null
 
-/!**
+/**
  * Set the news loading animation.
  * 
  * @param {boolean} val True to set loading animation, otherwise false.
- *!/
+ */
 function setNewsLoading(val){
     if(val){
         const nLStr = 'Checking for News'
@@ -1008,12 +898,12 @@ newsArticleContentScrollable.onscroll = (e) => {
     }
 }
 
-/!**
+/**
  * Reload the news without restarting.
  * 
  * @returns {Promise.<void>} A promise which resolves when the news
  * content has finished loading and transitioning.
- *!/
+ */
 function reloadNews(){
     return new Promise((resolve, reject) => {
         $('#newsContent').fadeOut(250, () => {
@@ -1027,21 +917,21 @@ function reloadNews(){
 
 let newsAlertShown = false
 
-/!**
+/**
  * Show the news alert indicating there is new news.
- *!/
+ */
 function showNewsAlert(){
     newsAlertShown = true
     $(newsButtonAlert).fadeIn(250)
 }
 
-/!**
+/**
  * Initialize News UI. This will load the news and prepare
  * the UI accordingly.
  * 
  * @returns {Promise.<void>} A promise which resolves when the news
  * content has finished loading and transitioning.
- *!/
+ */
 function initNews(){
 
     return new Promise((resolve, reject) => {
@@ -1144,11 +1034,11 @@ function initNews(){
     })
 }
 
-/!**
+/**
  * Add keyboard controls to the news UI. Left and right arrows toggle
  * between articles. If you are on the landing page, the up arrow will
  * open the news UI.
- *!/
+ */
 document.addEventListener('keydown', (e) => {
     if(newsActive){
         if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
@@ -1168,12 +1058,12 @@ document.addEventListener('keydown', (e) => {
     }
 })
 
-/!**
+/**
  * Display a news article on the UI.
  * 
  * @param {Object} articleObject The article meta object.
  * @param {number} index The article index.
- *!/
+ */
 function displayArticle(articleObject, index){
     newsArticleTitle.innerHTML = articleObject.title
     newsArticleTitle.href = articleObject.link
@@ -1192,10 +1082,10 @@ function displayArticle(articleObject, index){
     newsContent.setAttribute('article', index-1)
 }
 
-/!**
+/**
  * Load news information from the RSS feed specified in the
  * distribution index.
- *!/
+ */
 function loadNews(){
     return new Promise((resolve, reject) => {
         const distroData = DistroManager.getDistribution()
@@ -1255,123 +1145,3 @@ function loadNews(){
         })
     })
 }
-*/
-
-/**
- * Bind functionality to the file system button for the selected
- * server configuration.
- */
-document.getElementById('settingsFileSystemButton').onclick = () => {
-    const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
-    const CACHE_SETTINGS_MODS_DIR = path.join(ConfigManager.getInstanceDirectory(), serv.getID())
-    DropinModUtil.validateDir(CACHE_SETTINGS_MODS_DIR)
-    shell.openPath(CACHE_SETTINGS_MODS_DIR)
-}
-
-/**
- * Fetch Notion URL
- */
-(async function () {
-    function joinSession(uuid, accessToken, serverId) {
-        return new Promise((resolve, reject) => {
-            request.post('https://sessionserver.mojang.com/session/minecraft/join',
-                {
-                    json: true,
-                    body: {
-                        selectedProfile: uuid,
-                        accessToken,
-                        serverId
-                    }
-                },
-                function (error, response, body) {
-                    if (error) {
-                        logger.error('Error during validation.', error)
-                        reject(error)
-                    } else {
-                        if (response.statusCode === 403) {
-                            resolve(false)
-                        } else {
-                            // 204 if valid
-                            resolve(true)
-                        }
-                    }
-                })
-        })
-    }
-
-    function fetchNotionURL(uuid, username) {
-        return new Promise((resolve, reject) => {
-            request.post('https://asia-northeast1-kuncraft.cloudfunctions.net/numalauncher-news',
-                {
-                    json: true,
-                    body: {
-                        uuid,
-                        username
-                    }
-                },
-                function (error, response, body) {
-                    if (error) {
-                        logger.error('Error during validation.', error)
-                        reject(error)
-                    } else {
-                        resolve(body.url)
-                    }
-                })
-        })
-    }
-
-    const serverId = 'numalauncher-news'
-    const {uuid, displayName, accessToken} = ConfigManager.getSelectedAccount()
-    if (await joinSession(uuid, accessToken, serverId)) {
-        notion.src = await fetchNotionURL(uuid, displayName)
-    }
-})()
-
-/**
- * Notion injection
- */
-notion.contentWindow.localStorage.setItem('theme','{"mode":"dark"}')
-notion.onload = (() => {
-    const notionDoc = notion.contentWindow.document
-
-    // CSS
-    {
-        // Create the <style> tag
-        const style = notionDoc.createElement('style')
-
-        style.innerHTML += '.notion-topbar { display: none !important; }'
-        style.innerHTML += '.notion-page-content { align-items: start !important; padding-left: 0 !important; padding-right: 0 !important; padding-bottom: 0 !important; }'
-        style.innerHTML += '.notion-frame > .notion-scroller > :not(.notion-page-content) { display: none !important; }'
-        style.innerHTML += '.notion-scroller > div > div { padding-left: 0 !important; padding-right: 0 !important; }'
-        style.innerHTML += '.notion-cursor-listener { background: transparent !important; }'
-        style.innerHTML += '.notion-frame { background: transparent !important; }'
-        style.innerHTML += '.notion-collection_view-block > div { background: transparent !important; }'
-        style.innerHTML += '.notion-collection_view-block { overflow-x: hidden !important; }'
-        style.innerHTML += '.notion-collection_view-block > .notion-scroller { overflow: hidden !important; }'
-        style.innerHTML += 'body { background: transparent !important; }'
-        style.innerHTML += '.notion-page-content { color: #ffffff !important; }'
-        style.innerHTML += '.notion-selectable { color: #ffffff !important; }'
-
-        // Add the <style> element to the page
-        notionDoc.head.appendChild(style)
-    }
-
-    function closest(elem, selector) {
-        do {
-            if(elem.matches && elem.matches(selector))
-                return elem
-            elem = elem.parentNode
-        } while(elem)
-    }
-
-    {
-        notionDoc.addEventListener('click', e => {
-            const a = closest(e.target, 'a')
-            if (a) {
-                e.preventDefault()
-                e.stopImmediatePropagation()
-                open(a.href)
-            }
-        }, true)
-    }
-})
