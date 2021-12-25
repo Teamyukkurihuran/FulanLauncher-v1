@@ -133,10 +133,10 @@ function showFatalStartupError(){
                 'Join our Discord'
             )
             setOverlayHandler(() => {
-                shell.openExternal('https://github.com/ModRealms-Network/HeliosLauncher/releases')
+                shell.openExternal('https://github.com/Teamyukkurihuran/FulanLauncher/releases')
             })
             setDismissHandler(() => {
-                shell.openExternal('https://discord.gg/tKKeTdc')
+                shell.openExternal('https://discord.gg/Q9gztwkkS8')
             })
             toggleOverlay(true, true)
         })
@@ -456,7 +456,7 @@ ipcRenderer.on('cachedDistributionNotification', (event, res) => {
                 toggleOverlay(false)
             })
             setDismissHandler(() => {
-                shell.openExternal('https://discord.gg/tKKeTdc')
+                shell.openExternal('https://discord.gg/Q9gztwkkS8')
             })
             toggleOverlay(true, true)
         }, 2000)
