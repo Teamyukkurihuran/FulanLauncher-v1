@@ -258,8 +258,8 @@ loginCancelButton.onclick = (e) => {
             if(hasRPC){
                 if(ConfigManager.getSelectedServer()){
                     const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
-                    DiscordWrapper.updateDetails('Ready to Play!')
-                    DiscordWrapper.updateState('Server: ' + serv.getName())
+                    DiscordWrapper.updateDetails('Launcher内')
+                    DiscordWrapper.updateState('MOD: ' + serv.getName())
                 } else {
                     DiscordWrapper.updateDetails('Landing Screen...')
                 }
@@ -297,8 +297,8 @@ loginButton.addEventListener('click', () => {
                     if(hasRPC){
                         if(ConfigManager.getSelectedServer()){
                             const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
-                            DiscordWrapper.updateDetails('Ready to Play!')
-                            DiscordWrapper.updateState('Server: ' + serv.getName())
+                            DiscordWrapper.updateDetails('Launcher内')
+                            DiscordWrapper.updateState('MOD: ' + serv.getName())
                         } else {
                             DiscordWrapper.updateDetails('Landing Screen...')
                         }

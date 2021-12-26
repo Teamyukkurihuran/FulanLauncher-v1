@@ -180,8 +180,8 @@ document.getElementById('serverSelectConfirm').addEventListener('click', () => {
             updateSelectedServer(serv)
             refreshServerStatus(true)
             toggleOverlay(false)
-            DiscordWrapper.updateDetails('Ready to Play!')
-            DiscordWrapper.updateState('Server: ' + serv.getName())
+            DiscordWrapper.updateDetails('Launcher内')
+            DiscordWrapper.updateState('MOD: ' + serv.getName())
             return
         }
     }

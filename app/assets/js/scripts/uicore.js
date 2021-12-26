@@ -41,11 +41,11 @@ if(!isDev){
     ipcRenderer.on('autoUpdateNotification', (event, arg, info) => {
         switch(arg){
             case 'checking-for-update':
-                loggerAutoUpdater.log('Checking for update..')
-                settingsUpdateButtonStatus('Checking for Updates..', true)
+                loggerAutoUpdater.log('アップデートを確認しています')
+                settingsUpdateButtonStatus('アップデートを確認しています', true)
                 break
             case 'update-available':
-                loggerAutoUpdaterSuccess.log('New update available', info.version)
+                loggerAutoUpdaterSuccess.log('新しいアップデートがあります', info.version)
                 
                 if(process.platform === 'darwin'){
                     info.darwindownload = `https://github.com/Teamyukkurihuran/FuranLauncher/releases/download/v${info.version}/ModRealms-Launcher-setup-${info.version}.dmg`
@@ -56,7 +56,7 @@ if(!isDev){
                 break
             case 'update-downloaded':
                 loggerAutoUpdaterSuccess.log('Update ' + info.version + ' ready to be installed.')
-                settingsUpdateButtonStatus('Install Now', false, () => {
+                settingsUpdateButtonStatus('インストール！', false, () => {
                     if(!isDev){
                         ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
                     }
@@ -64,8 +64,8 @@ if(!isDev){
                 showUpdateUI(info)
                 break
             case 'update-not-available':
-                loggerAutoUpdater.log('No new update found.')
-                settingsUpdateButtonStatus('Check for Updates')
+                loggerAutoUpdater.log('新しいアップデートはありません。最新バージョンです。')
+                settingsUpdateButtonStatus('アップデートを確認')
                 break
             case 'ready':
                 updateCheckListener = setInterval(() => {

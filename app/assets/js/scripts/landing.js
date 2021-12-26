@@ -109,7 +109,7 @@ document.getElementById('launch_button').addEventListener('click', function(e){
             window.toggleDevTools()
         }
 
-        loggerLanding.log('Launching game..')
+        loggerLanding.log('プレイ中')
         const mcVersion = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer()).getMinecraftVersion()
         const jExe = ConfigManager.getJavaExecutable()
         if(jExe == null){
@@ -782,14 +782,14 @@ function dlAsync(login = true){
                 const authUser = ConfigManager.getSelectedAccount()
                 loggerLaunchSuite.log(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
                 let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
-                setLaunchDetails('Launching game..')
+                setLaunchDetails('プレイ中')
                 const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} has joined!`)
                 const SERVER_LEAVE_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} has left!`)
 
                 const onLoadComplete = () => {
                     toggleLaunchArea(false)
                     if(hasRPC){
-                        DiscordWrapper.updateDetails('Launching game...')
+                        DiscordWrapper.updateDetails('プレイ中')
                         DiscordWrapper.resetTime()
                     }
                     gameCrashReportListener()
@@ -884,12 +884,12 @@ function dlAsync(login = true){
                     proc.stdout.on('data', tempListener)
                     proc.stdout.on('data', gameLaunchErrorListener)
 
-                    setLaunchDetails('Your modpack is now launching...<br>Enjoy the server!')
+                    setLaunchDetails('マインクラフトを起動しました<br>お楽しみください。')
                     proc.on('close', (code, signal) => {
                         if(hasRPC){
                             const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
-                            DiscordWrapper.updateDetails('Ready to Play!')
-                            DiscordWrapper.updateState('Server: ' + serv.getName())
+                            DiscordWrapper.updateDetails('Launcher内')
+                            DiscordWrapper.updateState('MOD: ' + serv.getName())
                             DiscordWrapper.resetTime()
                         }
                     })
@@ -1046,8 +1046,8 @@ document.getElementById('newsButton').onclick = () => {
         if(hasRPC){
             if(ConfigManager.getSelectedServer()){
                 const serv = DistroManager.getDistribution().getServer(ConfigManager.getSelectedServer())
-                DiscordWrapper.updateDetails('Ready to Play!')
-                DiscordWrapper.updateState('Server: ' + serv.getName())
+                DiscordWrapper.updateDetails('Launcher内')
+                DiscordWrapper.updateState('MOD: ' + serv.getName())
             } else {
                 DiscordWrapper.updateDetails('Landing Screen...')
             }

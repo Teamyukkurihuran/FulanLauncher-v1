@@ -1528,7 +1528,7 @@ function populateSettingsUpdateInformation(data) {
                 shell.openExternal(data.darwindownload)
             })
         } else {
-            settingsUpdateButtonStatus('Downloading...', true)
+            settingsUpdateButtonStatus('ダウンロード中', true)
         }
     } else {
         settingsUpdateTitle.innerHTML = '最新バージョンのLauncherを使用中です。'
