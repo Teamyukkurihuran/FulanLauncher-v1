@@ -1430,7 +1430,7 @@ function populateVersionInformation(version, valueElement, titleElement, checkEl
         titleElement.style.color = '#ff886d'
         checkElement.style.background = '#ff886d'
     } else {
-        titleElement.innerHTML = 'LTS Release'
+        titleElement.innerHTML = 'Stable Release'
         titleElement.style.color = null
         checkElement.style.background = null
     }
@@ -1502,7 +1502,7 @@ const settingsUpdateActionButton = document.getElementById('settingsUpdateAction
  * @param {boolean} disabled Optional. Disable or enable the button
  * @param {function} handler Optional. New button event handler.
  */
-function settingsUpdateButtonStatus(text, disabled = false, handler = null) {
+function settingsUpdateButtonStatus(text, disabled = true, handler = null) {
     settingsUpdateActionButton.innerHTML = text
     settingsUpdateActionButton.disabled = disabled
     if (handler != null) {
