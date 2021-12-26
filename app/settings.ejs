@@ -14,7 +14,6 @@
                     <button class="settingsNavItem" rSc="settingsTabJava">Java</button>
                     <div class="settingsNavSpacer"></div>
                     <button class="settingsNavItem" rSc="settingsTabAbout">About</button>
-                    <button class="settingsNavItem" rSc="settingsTabUpdate" id="settingsNavUpdate">アップデート</button>
                     <div id="settingsNavContentBottom">
                         <div class="settingsNavDivider"></div>
                         <button id="settingsNavDone">閉じる</button>
@@ -249,18 +248,6 @@
                 <span class="settingsTabHeaderText">Launcher Settings</span>
                 <span class="settingsTabHeaderDesc">ランチャー自体に関連するオプション。</span>
             </div>
-            <div class="settingsFieldContainer">
-                <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">プレイリリース版のインストールの許可</span>
-                    <span class="settingsFieldDesc">プレリリースには、完全にテストまたは統合されていない可能性のある新機能が含まれています。<br>This will always be true if you are using a pre-release version.</span>
-                </div>
-                <div class="settingsFieldRight">
-                    <label class="toggleSwitch">
-                        <input type="checkbox" cValue="AllowPrerelease">
-                        <span class="toggleSwitchSlider"></span>
-                    </label>
-                </div>
-            </div>
             <div class="settingsFileSelContainer">
                 <div class="settingsFileSelContent">
                     <div class="settingsFieldTitle" id="settingsDataDirTitle">データディレクトリ</div>
@@ -280,6 +267,18 @@
                     </div>
                 </div>
                 <div class="settingsFileSelDesc">すべてのゲームファイルとローカルJavaインストールは、データディレクトリに保存されます。<br>スクリーンショットとワールドセーブは、対応するサーバー構成のインスタンスフォルダーに保存されます。</div>
+            </div>
+            <div class="settingsFieldContainer" style="visibility:hidden ">
+                <div class="settingsFieldLeft">
+                    <span class="settingsFieldTitle">プレイリリース版のインストールの許可</span>
+                    <span class="settingsFieldDesc">プレリリースには、完全にテストまたは統合されていない可能性のある新機能が含まれています。<br>This will always be true if you are using a pre-release version.</span>
+                </div>
+                <div class="settingsFieldRight">
+                    <label class="toggleSwitch">
+                        <input type="checkbox" cValue="AllowPrerelease">
+                        <span class="toggleSwitchSlider"></span>
+                    </label>
+                </div>
             </div>
             <div class="settingsServerCodeContainer" style="visibility:hidden ">
                 <div class="settingsServerCodesTitle">Your Server Codes</div>
